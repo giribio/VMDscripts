@@ -1,7 +1,7 @@
 # Written by Lazemare.
 # This script is used to perform the rainbow color theme when drawing proteins by VMD.
 # To use this script, you should change the coloring theme in Graphics-Representations to "index",
-# the source rainbow.tcl in the Console. You can change the values of ry, yg, gc and cb to modify 
+# then source rainbow.tcl in the Console. You can change the values of ry, yg, gc and cb to modify 
 # proportion of these four colors, but  ry+yg+gc+cb should equals to 1.0.
 # NOTE that when using this script, your system should contain the target protein only.
 #--------------------------------------------------- 
