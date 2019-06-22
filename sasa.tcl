@@ -3,7 +3,7 @@
 # Note that select1 is the structure you want to calclate SASA. If you would like 
 # to calclate only one or several parts belong to select1, you could assign select2.
 # You can modify extending of each radius by changing srad. The VMD user guide 
-# recommand set it to 1.4. 
+# recommends to set it to 1.4. 
 #--------------------------------------------------- 
 # Here are the paras:
 set outfile [open sasa.dat w]
