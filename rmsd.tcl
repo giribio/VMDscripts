@@ -13,8 +13,8 @@ set f0 [atomselect top "$sel" frame $ref_frame]
 set select [atomselect top "$sel"]    
 # rmsd calculation loop   
 for { set i 1 } { $i <= $nf } { incr i } {    
-$select frame $i  
-puts $outfile "[measure rmsd $select $f0] " 
+    $select frame $i  
+    puts $outfile "[measure rmsd $select $f0] " 
 }
 close $outfile
 
