@@ -1,7 +1,6 @@
 # Written by Lazemare.
 # This script is used to decompose RMSD of protein into 
-# contributions of each residue, and gives out average
-# RMSD of these residues in given range of frames.
+# contributions of each residue, and give out the ratio.
 # But if you would like to, this script can also be used to 
 # items expect proteins, for example, nucleic acids.
 # ref_frame is the frame number you want to compare with.
@@ -14,13 +13,13 @@
 set ref_frame 0
 set aim_frame last
 set cutoff 10
-set sel "protein"
+set sel "protein and resid 1 to 20"
 set outfile [open rmsd_d.dat w] 
 #---------------------------------------------------
 set nf [molinfo top get numframes] 
 set select [atomselect top "$sel" frame 0]
+set select_ref [atomselect top "$sel" frame 0]
 set reslist [lsort -integer -unique [$select get resid]]
-# rmsd calculation loop
 set startframe 0
 set endframe 0
 if {$cutoff > $nf} {
@@ -42,17 +41,31 @@ if {$nf < [expr ($aim_frame + $cutoff)]} {
     set startframe [expr ($aim_frame - $cutoff)]
     set endframe [expr ($aim_frame + $cutoff)]
 }
+# rmsd calculation loop
 set nframes [expr ($endframe - $startframe)]
+set atomlist_tot [$select_ref get index]
+set natoms_tot [expr [lindex $atomlist_tot [expr [llength $atomlist_tot] - 1]] - [lindex $atomlist_tot 0]]
 foreach res $reslist {
-	set res_ref [atomselect top "$sel and resid $res" frame $ref_frame]
-    set tmp_aim [atomselect top "$sel and resid $res" frame 0]
-    puts -nonewline $outfile "$res "
+     set rmsd_rat($res) 0.0
+}
+for { set i $startframe } { $i <= $endframe } { incr i } {     
+    $select frame $i
+    set rmsd_tot 0.0
+    set rmsd_tot [measure rmsd $select $select_ref]
     set rmsd_tmp 0.0
-    for { set i $startframe } { $i <= $endframe } { incr i } {     
-        $tmp_aim frame $i
-        set rmsd_tmp [expr ($rmsd_tmp + [measure rmsd $res_ref $tmp_aim])]
+    set rmsd_rat(0) 0.0
+    foreach res $reslist {
+        set res_ref [atomselect top "$sel and resid $res" frame $ref_frame]
+        set tmp_aim [atomselect top "$sel and resid $res" frame $i]
+        set atomlist [$res_ref get index]
+        set natoms [expr [lindex $atomlist [expr [llength $atomlist] - 1]] - [lindex $atomlist 0]]
+        set rmsd_tmp [measure rmsd $res_ref $tmp_aim]
+        set rmsd_rat($res) [expr ($rmsd_rat($res) + ($rmsd_tmp / $rmsd_tot) * ($rmsd_tmp / $rmsd_tot) * $natoms / $natoms_tot * 100)]
     }
-    set avg_rmsd_tmp [expr ($rmsd_tmp / $nframes)]
-	puts $outfile "$avg_rmsd_tmp" 
+}
+for { set i 1 } { $i <= [expr [array size rmsd_rat] - 1]} { incr i } {
+    set rmsd_rat($i) [expr ($rmsd_rat($i) / $nframes)]
+    puts -nonewline $outfile "$i "
+    puts $outfile "$rmsd_rat($i)"
 }
 close $outfile
