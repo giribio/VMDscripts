@@ -1,5 +1,5 @@
 # Written by Lazemare.
-# This script is used to align frames by selections.
+# This script is used to calculate RMSD of selected structures.
 # ref_frame is the frame number you want to compare with.
 # sel is the structure you want to calculate RMSD.
 #--------------------------------------------------- 
