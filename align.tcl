@@ -19,4 +19,4 @@ for { set i 1 } { $i < $nf } { incr i } {
     set mv [measure fit $f $f0]
     $sel move $mv
 }
-
+puts "All Done!"
