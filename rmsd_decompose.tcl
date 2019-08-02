@@ -72,3 +72,4 @@ foreach res $reslist {
 }
 unset rmsd_rat
 close $outfile
+puts "All Done!"
