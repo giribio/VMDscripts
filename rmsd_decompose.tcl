@@ -10,36 +10,39 @@
 # sel is the structure you want to calculate RMSD.
 #--------------------------------------------------- 
 # Here are the paras:
-set ref_frame 0
-set aim_frame 200
-set cutoff 20
+set ref_frame first
+set aim_frame last
+set cutoff 10
 set sel "protein"
 set outfile [open rmsd_d.dat w] 
 #---------------------------------------------------
 set nf [molinfo top get numframes] 
 set select [atomselect top "$sel" frame 0]
-set select_ref [atomselect top "$sel" frame 0]
+set select_ref [atomselect top "$sel" frame $ref_frame]
 set reslist [lsort -integer -unique [$select get resid]]
 set startframe 0
 set endframe 0
 if {$cutoff > $nf} {
     puts "You have set a very big cutoff value, which is larger than the total frame number!!!"
-    exit
-}
-if {$aim_frame == "first"} {
-    set aim_frame 0
-} elseif {$aim_frame == "last"} {
-    set aim_frame $nf
-}
-if {$nf < [expr ($aim_frame + $cutoff)]} {
-    set startframe [expr ($nf - 2 * $cutoff)]
+    puts "I have set the calclation range to all frames. THIS MAY USE VARY LARGE MEMORY!!!"
+    set startframe 1
     set endframe $nf
-} elseif {[expr ($aim_frame - $cutoff)] < 0} {
-    set startframe 0
-    set endframe [expr (2 * $cutoff)]
 } else {
-    set startframe [expr ($aim_frame - $cutoff)]
-    set endframe [expr ($aim_frame + $cutoff)]
+    if {$aim_frame == "first"} {
+        set aim_frame 1
+    } elseif {$aim_frame == "last"} {
+        set aim_frame $nf
+    }
+    if {$nf < [expr ($aim_frame + $cutoff)]} {
+        set startframe [expr ($nf - 2 * $cutoff)]
+        set endframe $nf
+    } elseif {[expr ($aim_frame - $cutoff)] < 0} {
+        set startframe 1
+        set endframe [expr (2 * $cutoff)]
+    } else {
+        set startframe [expr ($aim_frame - $cutoff)]
+        set endframe [expr ($aim_frame + $cutoff)]
+    }
 }
 # rmsd calculation loop
 set nframes [expr ($endframe - $startframe + 1)]
