@@ -22,3 +22,4 @@ foreach res $reslist {
 }
 set all [atomselect top "all"]
 $all writepdb $output_name.pdb
+puts "All Done!"
