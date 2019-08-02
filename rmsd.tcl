@@ -17,4 +17,4 @@ for { set i 1 } { $i <= $nf } { incr i } {
     puts $outfile "[measure rmsd $select $f0] " 
 }
 close $outfile
-
+puts "All Done!"
