@@ -3,6 +3,8 @@
 # contributions of each residue, and give out the ratio.
 # But if you would like to, this script can also be used to 
 # items expect proteins, for example, nucleic acids.
+# Not the same as RMSF, you can select a refence frame, but
+# not the average conformation.
 # ref_frame is the frame number you want to compare with.
 # aim_frame is the frame number your want to decompose RMSD.
 # cutoff is the number of frames before and after aim_frame
