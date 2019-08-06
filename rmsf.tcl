@@ -33,6 +33,7 @@ foreach res $reslist {
     set rmsf_tmp [expr ($rmsf_tmp / $natoms) ** 0.5 ]
     puts -nonewline $outfile "$res "
     puts $outfile "$rmsf_tmp"
+    unset rmsf_list
 }
 close $outfile
 puts "All Done!"
