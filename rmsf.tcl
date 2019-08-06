@@ -24,13 +24,13 @@ if {$end_frame == "last"} {
 foreach res $reslist {
     set sel_tmp [atomselect top "$sel and resid $res"]
     set atomlist [$sel_tmp get index]
-    set natoms [expr [lindex $atomlist [expr [llength $atomlist] - 1]] - [lindex $atomlist 0] + 1]
+    set natoms [expr [llength $atomlist]]
     set rmsf_list [measure rmsf $sel_tmp first $start_frame last $end_frame]
     set rmsf_tmp 0
     for { set j 0 } { $j <= [expr $natoms - 1] } { incr j } { 
-        set rmsf_tmp [expr $rmsf_tmp + [expr [lindex $rmsf_list $j]]]
+        set rmsf_tmp [expr $rmsf_tmp + [expr [lindex $rmsf_list $j]] ** 2 ]
     }
-    set rmsf_tmp [expr $rmsf_tmp / $natoms]
+    set rmsf_tmp [expr ($rmsf_tmp / $natoms) ** 0.5 ]
     puts -nonewline $outfile "$res "
     puts $outfile "$rmsf_tmp"
 }
