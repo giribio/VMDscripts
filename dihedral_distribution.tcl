@@ -1,7 +1,7 @@
 # Written by Lazemare.
 # Used to calculate the distribution alone the simulation trajectory of the 
 # dihedral between two planes, which are defined by four points, and give out 
-# the Distribution Percentage. Note that these two planes are defined separately 
+# the distribution percentage. Note that these two planes are defined separately 
 # by the position of select1, select2, select3 and select2, select3, select4.
 #--------------------------------------------------- 
 # Here are the paras:
