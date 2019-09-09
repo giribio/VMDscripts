@@ -5,10 +5,10 @@
 #--------------------------------------------------- 
 # Here are the paras:
 set outfile [open dihedral.dat w]
-set select1 "protein and resid 1"
-set select2 "protein and resid 2"
-set select3 "protein and resid 3"
-set select4 "protein and resid 4"
+set select1 "index 0"
+set select2 "index 4"
+set select3 "index 7"
+set select4 "index 10"
 #---------------------------------------------------
 set nf [molinfo top get numframes]
 set sel1 [atomselect top "$select1"]
@@ -24,14 +24,22 @@ for { set i 1 } { $i <= $nf } { incr i } {
 	set V3 [measure center "$sel3"]
 	$sel4 frame $i
 	set V4 [measure center "$sel4"]
-	set VA1 [vecsub $V2 $V1]
-	set VA2 [vecsub $V3 $V1]
-	set VB1 [vecsub $V3 $V2]
-	set VB2 [vecsub $V4 $V2]
-	set norm1 [veccross $VA1 $VA2]
-	set norm2 [veccross $VB1 $VB2]
-	set COSAB [expr [vecdot $norm1 $norm2]/([veclength $norm1]*[veclength $norm2])]
-	set DIHED [expr acos($COSAB)*180/3.1415926] 
+	set V1 [vecsub $V1 $V2]
+	set V2 [vecsub $V3 $V2]
+	set V3 [vecsub $V4 $V3]
+	set norm1 [veccross $V1 $V2] 
+	set norm2 [veccross $V2 $V3]
+	set norm1 [vecscale [expr 1 / [veclength $norm1]] $norm1]
+	set norm2 [vecscale [expr 1 / [veclength $norm2]] $norm2]
+	set m [veccross $norm1 [vecscale [expr 1 / [veclength $V2]] $V2]]
+	set x [vecdot $norm1 $norm2]
+	set y [vecdot $m $norm2]
+	set DIHED [expr atan2($y,$x)*180/3.1415926] 
+	if {$DIHED > 0} {
+		set DIHED [expr 180.0 - $DIHED]
+	} else {
+		set DIHED [expr -180.0 - $DIHED]
+	}
 	puts $outfile "[expr $DIHED]"
 }
 close $outfile
