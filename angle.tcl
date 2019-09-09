@@ -1,7 +1,7 @@
 # Written by Lazemare.
 # Used to calculate the include angle between two structures (for example, two α-helices).
-# Note that select1 and select3 are starting points of these two structures, and
-# select1 and select3 are end points of these two structures. Thus, select1 and select3  
+# Note that select1 and select3 are starting points of these two structures, while
+# select2 and select4 are end points of these two structures. Thus, select1 and select3  
 # could be the same or not.
 #--------------------------------------------------- 
 # Here are the paras:
