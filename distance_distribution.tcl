@@ -27,7 +27,7 @@ for { set i 1 } { $i <= $nf } { incr i } {
         set mindis $DISTA
     }
 }
-set npoints [expr int(floor([expr $maxdis * 500] - [expr $mindis * 500]))]
+set npoints [expr int(floor([expr $maxdis * 500] - [expr $mindis * 500] + 1))]
 for { set i 0 } { $i < $npoints } { incr i } {    
 	set density($i) 0.0
 }
