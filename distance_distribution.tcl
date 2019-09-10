@@ -7,12 +7,13 @@
 # If the curve generated from this script is too rugged, it means that 
 # maybe you have chosen a too large tau, or have too little frames.
 # Then you could try to change the value of tau to generate a series of 
-# more smooth data, with lower resolution. 
+# more smooth data, with lower resolution.  
 #--------------------------------------------------- 
 # Here are the paras:
 set outfile [open distance_distribution.dat w]
-set select1 "index 0"
-set select2 "index 1"
+set select1 "protein and resid 1"
+set select2 "protein and resid 10"
+set tau 100
 #---------------------------------------------------
 set nf [molinfo top get numframes]
 set sel1 [atomselect top "$select1"]
@@ -33,7 +34,7 @@ for { set i 1 } { $i <= $nf } { incr i } {
         set mindis $DISTA
     }
 }
-set npoints [expr int(floor([expr $maxdis * 500] - [expr $mindis * 500] + 1))]
+set npoints [expr int(floor([expr $maxdis * $tau] - [expr $mindis * $tau])) + 1]
 for { set i 0 } { $i < $npoints } { incr i } {    
 	set density($i) 0.0
 }
@@ -44,12 +45,12 @@ for { set i 1 } { $i <= $nf } { incr i } {
 	set V2 [measure center "$sel2"]
 	set VA [vecsub $V1 $V2]
 	set DISTA [veclength $VA]
-    set index [expr int(floor([expr ($DISTA - $mindis) * 500]))]
+    set index [expr int(floor([expr ($DISTA - $mindis) * $tau]))]
 	set density($index) [expr $density($index) + 1.0]
 }
 for { set i 0 } { $i < $npoints } { incr i } {    
 	set density($i) [expr $density($i) / $nf * 100]
-	puts -nonewline $outfile "[expr $mindis + $i / 500.0]"
+	puts -nonewline $outfile "[expr $mindis + $i / ($tau * 1.0)]"
 	puts -nonewline $outfile " "
 	puts $outfile "[expr $density($i)]"
 }
