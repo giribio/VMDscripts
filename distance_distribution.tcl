@@ -1,7 +1,13 @@
 # Written by Lazemare.
 # Used to calculate the distribution alone the simulation trajectory of
 # the distance between two structures (for example, two residues), and 
-# give out the distribution percentage.
+# give out the distribution percentage. The parameter tau is the number
+# of data points between the largest length and the shortest length. The
+# bigger this value is, the higher resolution you will have.
+# If the curve generated from this script is too rugged, it means that 
+# maybe you have chosen a too large tau, or have too little frames.
+# Then you could try to change the value of tau to generate a series of 
+# more smooth data, with lower resolution. 
 #--------------------------------------------------- 
 # Here are the paras:
 set outfile [open distance_distribution.dat w]
