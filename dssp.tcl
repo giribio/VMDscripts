@@ -1,19 +1,29 @@
 # Written by Lazemare.
-# This script is used to calculate the proportion of alpha helix
-# in given structures (e.g. protein) with the DSSP package. NOTE 
-# that if you would like to use this script, you must install DSSP
+# This script is used to calculate the proportion of secondary structure
+# in given structures (e.g. protein) with the DSSP package. NOTE that if 
+# you would like to use this script, you must install the DSSP program
 # (https://github.com/cmbi/xssp) first.
 # select is the structure you will analysis.
 # execname is the name of your DSSP executable file.
 # freq is the frequency you would like to perform the calculation.
+# structure is the structure type you want to analysis with DSSP.
+# The value could be one of these options:
+# H                  Alpha Helix
+# B                  Beta Bridge
+# E                  Strand
+# G                  Helix-3
+# I                  Helix-5
+# T                  Turn
+# S                  Bend
 # Here are the paras:
 #---------------------------------------------------
 set outfile [ open alpha.dat w ]
 set select "protein"
+set structure H
 set execname mkdssp
 set freq 1
 #---------------------------------------------------
-proc readDSSPoutput {dsspout} {
+proc readDSSPoutput {dsspout structure} {
 
     set fp [open "$dsspout" r]
     fconfigure $fp -buffering line
@@ -30,7 +40,7 @@ proc readDSSPoutput {dsspout} {
     }
     for {set i 1} {$i < $numresidues} {incr i} {
         gets $fp data
-        if {[lindex $data 4] == "H"} {
+        if {[lindex $data 4] == "$structure"} {
             set helix [expr $helix + 1.0]
             # puts -nonewline [lindex $data 1]
             # puts [lindex $data 4]
@@ -47,7 +57,7 @@ for { set i 1 } { $i < $nf } { incr i $freq } {
     $sel frame $i
 	$sel writepdb temp.pdb
 	exec $execname -i temp.pdb -o temp.dssp
-	set helix [readDSSPoutput temp.dssp]
+	set helix [readDSSPoutput temp.dssp $structure]
     puts -nonewline $outfile "$i"
     puts -nonewline $outfile " "
     puts $outfile "$helix"
