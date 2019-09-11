@@ -1,0 +1,61 @@
+# Written by Lazemare.
+# This script is used to calculate the proportion of alpha helix
+# in given structures (e.g. protein) with the DSSP package. NOTE 
+# that if you would like to use this script, you must install DSSP
+# (https://github.com/cmbi/xssp) first.
+# select is the structure you will analysis.
+# execname is the name of your DSSP executable file.
+# freq is the frequency you would like to perform the calculation.
+# Here are the paras:
+#---------------------------------------------------
+set outfile [ open alpha.dat w ]
+set select "protein"
+set execname mkdssp
+set freq 1
+#---------------------------------------------------
+proc readDSSPoutput {dsspout} {
+
+    set fp [open "$dsspout" r]
+    fconfigure $fp -buffering line
+    gets $fp data
+    set helix 0.0
+    while {[lindex $data 0] != "AUTHOR"} {
+        gets $fp data
+    }
+    gets $fp data
+    set numresidues [lindex $data 0]
+    # puts "$numresidues"
+    while {[lindex $data 0] != "#"} {
+        gets $fp data
+    }
+    for {set i 1} {$i < $numresidues} {incr i} {
+        gets $fp data
+        if {[lindex $data 4] == "H"} {
+            set helix [expr $helix + 1.0]
+            # puts -nonewline [lindex $data 1]
+            # puts [lindex $data 4]
+        }
+    }
+    close $fp
+
+return [expr $helix / $numresidues * 100]
+}
+
+set nf [molinfo top get numframes]
+set sel [atomselect top "$select"]
+for { set i 1 } { $i < $nf } { incr i $freq } {
+    $sel frame $i
+	$sel writepdb temp.pdb
+	exec $execname -i temp.pdb -o temp.dssp
+	set helix [readDSSPoutput temp.dssp]
+    puts -nonewline $outfile "$i"
+    puts -nonewline $outfile " "
+    puts $outfile "$helix"
+    puts -nonewline "Finished " 
+    puts -nonewline [expr int([expr ($i * 1.0) / $nf * 100])]
+    puts " %"
+}
+file delete temp.pdb
+file delete temp.dssp
+close $outfile
+puts "All Done!"
