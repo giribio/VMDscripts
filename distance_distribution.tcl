@@ -45,7 +45,7 @@ for { set i 1 } { $i <= $nf } { incr i } {
 	set V2 [measure center "$sel2"]
 	set VA [vecsub $V1 $V2]
 	set DISTA [veclength $VA]
-    set index [expr int(floor([expr ($DISTA - $mindis) * $tau]))]
+	set index [expr int(floor([expr ($DISTA - $mindis) * $tau]))]
 	set density($index) [expr $density($index) + 1.0]
 }
 for { set i 0 } { $i < $npoints } { incr i } {    
