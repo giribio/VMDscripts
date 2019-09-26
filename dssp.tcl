@@ -3,7 +3,9 @@
 # in given structures (e.g. protein) with the DSSP package. NOTE that if 
 # you would like to use this script, you must install the DSSP program
 # (https://github.com/cmbi/xssp) first.
-# select is the structure you will analysis.
+# select is the structure you will analysis. But note that this selection 
+# must be a complete structure, but cannot be some parts of a whole protein 
+# chain. For example, you can set this variable as "protein" or "protein and chain A". 
 # execname is the name of your DSSP executable file.
 # freq is the frequency you would like to perform the calculation.
 # structure is the structure type you want to analysis with DSSP.
